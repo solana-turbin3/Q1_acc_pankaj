@@ -1,0 +1,3 @@
+[submodule "whitelist-transfer-hook"]
+	path = whitelist-transfer-hook
+	url = git@github.com:ASCorreia/whitelist-transfer-hook.git

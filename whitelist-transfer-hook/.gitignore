@@ -1,4 +1,5 @@
 /.anchor
 /node_modules
 /target
-.DS_Storetest-ledger/
+.DS_Store
+test-ledger/

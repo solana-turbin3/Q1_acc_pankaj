@@ -18,6 +18,7 @@ pub struct RequestRandomness<'info> {
 
     /// CHECK: The oracle queue
     #[account(mut, address = ephemeral_vrf_sdk::consts::DEFAULT_EPHEMERAL_QUEUE)]
+    // DEFAULT_EPHEMERAL_QUEUE (special queue optimized for Magicblock Ephemeral Rollups)
     pub oracle_queue: AccountInfo<'info>,
 }
 
@@ -37,6 +38,7 @@ impl<'info> RequestRandomness<'info> {
             ..Default::default()
         });
 
+        // Sending instruction to the VRF Program on-chain through Oracle-queue
         self.invoke_signed_vrf(&self.user.to_account_info(), &ix)?;
 
         Ok(())

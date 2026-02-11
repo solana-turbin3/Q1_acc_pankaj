@@ -78,9 +78,9 @@ describe("er-state-account", () => {
         .accountsPartial({
           user: anchor.Wallet.local().publicKey,
           userAccount: userAccount,
-          queue: DEFAULT_EPHEMERAL_QUEUE,
-          vrf: VRF_PROGRAM_ID,
-          identity: PublicKey.findProgramAddressSync([Buffer.from("identity")], program.programId)[0], // Correct seed
+          oracleQueue: DEFAULT_EPHEMERAL_QUEUE,
+          vrfProgram: VRF_PROGRAM_ID,
+          programIdentity: PublicKey.findProgramAddressSync([Buffer.from("identity")], program.programId)[0],
           systemProgram: anchor.web3.SystemProgram.programId,
           slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY,
         })
@@ -112,9 +112,9 @@ describe("er-state-account", () => {
       .accountsPartial({
         user: providerEphemeralRollup.wallet.publicKey,
         userAccount: userAccount,
-        queue: DEFAULT_EPHEMERAL_QUEUE,
-        vrf: VRF_PROGRAM_ID,
-        identity: PublicKey.findProgramAddressSync([Buffer.from("identity")], program.programId)[0],
+        oracleQueue: DEFAULT_EPHEMERAL_QUEUE,
+        vrfProgram: VRF_PROGRAM_ID,
+        programIdentity: PublicKey.findProgramAddressSync([Buffer.from("identity")], program.programId)[0],
         systemProgram: anchor.web3.SystemProgram.programId,
         slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY,
       })

@@ -54,7 +54,7 @@ pub mod er_state_account {
     }
 
     pub fn request_randomness(ctx: Context<RequestRandomness>) -> Result<()> {
-        ctx.accounts.request_randomness(ctx.bumps.identity)?;
+        ctx.accounts.request_randomness(0)?;
         Ok(())
     }
 

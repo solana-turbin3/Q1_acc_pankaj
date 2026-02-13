@@ -12,24 +12,24 @@ describe("er-state-account", () => {
   const providerEphemeralRollup = new anchor.AnchorProvider(
     new anchor.web3.Connection(
       process.env.EPHEMERAL_PROVIDER_ENDPOINT ||
-      "https://devnet.magicblock.app/",
+        "https://devnet.magicblock.app/",
       {
         wsEndpoint:
           process.env.EPHEMERAL_WS_ENDPOINT || "wss://devnet.magicblock.app/",
-      },
+      }
     ),
-    anchor.Wallet.local(),
+    anchor.Wallet.local()
   );
   console.log("Base Layer Connection: ", provider.connection.rpcEndpoint);
   console.log(
     "Ephemeral Rollup Connection: ",
-    providerEphemeralRollup.connection.rpcEndpoint,
+    providerEphemeralRollup.connection.rpcEndpoint
   );
   console.log(`Current SOL Public Key: ${anchor.Wallet.local().publicKey}`);
 
   before(async function () {
     const balance = await provider.connection.getBalance(
-      anchor.Wallet.local().publicKey,
+      anchor.Wallet.local().publicKey
     );
     console.log("Current balance is", balance / LAMPORTS_PER_SOL, " SOL", "\n");
   });
@@ -38,13 +38,19 @@ describe("er-state-account", () => {
 
   const userAccount = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("user"), anchor.Wallet.local().publicKey.toBuffer()],
-    program.programId,
+    program.programId
   )[0];
 
   // Constants for VRF
-  const VRF_PROGRAM_ID = new PublicKey("Vrf1RNUjXmQGjmQrQLvJHs9SNkvDJEsRVFPkfSQUwGz");
-  const DEFAULT_EPHEMERAL_QUEUE = new PublicKey("5hBR571xnXppuCPveTrctfTU7tJLSN94nq7kv7FRK5Tc");
-  const IDENTITY = new PublicKey("9irBy75QS2BN81FUgXuHcjqceJJRuc9oDkAe8TKVvvAw");
+  const VRF_PROGRAM_ID = new PublicKey(
+    "Vrf1RNUjXmQGjmQrQLvJHs9SNkvDJEsRVFPkfSQUwGz"
+  );
+  const DEFAULT_EPHEMERAL_QUEUE = new PublicKey(
+    "5hBR571xnXppuCPveTrctfTU7tJLSN94nq7kv7FRK5Tc"
+  );
+  const IDENTITY = new PublicKey(
+    "9irBy75QS2BN81FUgXuHcjqceJJRuc9oDkAe8TKVvvAw"
+  );
 
   it("Is initialized!", async () => {
     // Add your test here.
@@ -80,14 +86,20 @@ describe("er-state-account", () => {
           userAccount: userAccount,
           oracleQueue: DEFAULT_EPHEMERAL_QUEUE,
           vrfProgram: VRF_PROGRAM_ID,
-          programIdentity: PublicKey.findProgramAddressSync([Buffer.from("identity")], program.programId)[0],
+          programIdentity: PublicKey.findProgramAddressSync(
+            [Buffer.from("identity")],
+            program.programId
+          )[0],
           systemProgram: anchor.web3.SystemProgram.programId,
           slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY,
         })
         .rpc({ skipPreflight: true });
       console.log("\nRandomness Requested on Base Layer: ", tx);
     } catch (e) {
-      console.log("Skipping Task 1 execution (likely due to missing Oracle on local/devnet or config mismatch):", e);
+      console.log(
+        "Skipping Task 1 execution (likely due to missing Oracle on local/devnet or config mismatch):",
+        e
+      );
     }
   });
 
@@ -114,14 +126,19 @@ describe("er-state-account", () => {
         userAccount: userAccount,
         oracleQueue: DEFAULT_EPHEMERAL_QUEUE,
         vrfProgram: VRF_PROGRAM_ID,
-        programIdentity: PublicKey.findProgramAddressSync([Buffer.from("identity")], program.programId)[0],
+        programIdentity: PublicKey.findProgramAddressSync(
+          [Buffer.from("identity")],
+          program.programId
+        )[0],
         systemProgram: anchor.web3.SystemProgram.programId,
         slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY,
       })
       .transaction();
 
     tx.feePayer = providerEphemeralRollup.wallet.publicKey;
-    tx.recentBlockhash = (await providerEphemeralRollup.connection.getLatestBlockhash()).blockhash;
+    tx.recentBlockhash = (
+      await providerEphemeralRollup.connection.getLatestBlockhash()
+    ).blockhash;
 
     const signedTx = await providerEphemeralRollup.wallet.signTransaction(tx);
 
@@ -131,11 +148,13 @@ describe("er-state-account", () => {
 
     console.log("\nRandomness Requested Inside ER: ", txHash);
 
-    // In ER, VRF is often synchronous or very fast. We can check if state changed.
-    await new Promise(r => setTimeout(r, 2000)); // Wait a bit
+    await new Promise((r) => setTimeout(r, 2000));
 
     const account = await program.account.userAccount.fetch(userAccount);
-    console.log("User Account Data after VRF (should be random):", account.data.toString());
+    console.log(
+      "User Account Data after VRF (should be random):",
+      account.data.toString()
+    );
   });
 
   it("Update State and Commit to Base Layer!", async () => {
@@ -148,7 +167,9 @@ describe("er-state-account", () => {
       .transaction();
 
     tx.feePayer = providerEphemeralRollup.wallet.publicKey;
-    tx.recentBlockhash = (await providerEphemeralRollup.connection.getLatestBlockhash()).blockhash;
+    tx.recentBlockhash = (
+      await providerEphemeralRollup.connection.getLatestBlockhash()
+    ).blockhash;
 
     const signedTx = await providerEphemeralRollup.wallet.signTransaction(tx);
     const txHash = await providerEphemeralRollup.sendAndConfirm(signedTx, [], {
@@ -156,7 +177,7 @@ describe("er-state-account", () => {
     });
     const txCommitSgn = await GetCommitmentSignature(
       txHash,
-      providerEphemeralRollup.connection,
+      providerEphemeralRollup.connection
     );
 
     console.log("\nUser Account State Updated & Committed: ", txHash);
@@ -171,14 +192,16 @@ describe("er-state-account", () => {
       .transaction();
 
     tx.feePayer = providerEphemeralRollup.wallet.publicKey;
-    tx.recentBlockhash = (await providerEphemeralRollup.connection.getLatestBlockhash()).blockhash;
+    tx.recentBlockhash = (
+      await providerEphemeralRollup.connection.getLatestBlockhash()
+    ).blockhash;
     const signedTx = await providerEphemeralRollup.wallet.signTransaction(tx);
     const txHash = await providerEphemeralRollup.sendAndConfirm(signedTx, [], {
       skipPreflight: false,
     });
     const txCommitSgn = await GetCommitmentSignature(
       txHash,
-      providerEphemeralRollup.connection,
+      providerEphemeralRollup.connection
     );
 
     console.log("\nUser Account Undelegated: ", txHash);

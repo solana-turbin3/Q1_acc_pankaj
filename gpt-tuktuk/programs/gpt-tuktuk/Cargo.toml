@@ -1,0 +1,33 @@
+[package]
+name = "gpt-tuktuk"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "gpt_tuktuk"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+anchor-debug = []
+custom-heap = []
+custom-panic = []
+
+
+[dependencies]
+anchor-lang = "0.31.1"
+tuktuk-program = { git = "https://github.com/helium/tuktuk.git", rev = "112afe5e80aff8199c3b779203b76b35d97c42d1" }
+ephemeral-rollups-sdk = { version = "0.8.5", features = ["anchor"] }
+ephemeral-vrf-sdk = { version = "0.2.3", features = ["anchor"] }
+blake3 = "=1.5.5"
+solana-gpt-oracle = { version = "0.1.1", features = ["cpi"] }
+
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }

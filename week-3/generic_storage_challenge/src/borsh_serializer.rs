@@ -1,5 +1,6 @@
 use crate::{error::StorageError, Serializer};
 
+#[derive(Clone)]
 pub struct BorshSerializer;
 
 impl<T> Serializer<T> for BorshSerializer

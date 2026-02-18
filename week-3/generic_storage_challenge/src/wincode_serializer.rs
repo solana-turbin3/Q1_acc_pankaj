@@ -1,5 +1,6 @@
 use crate::{error::StorageError, Serializer};
 
+#[derive(Clone)]
 pub struct WincodeSerializer;
 
 impl<T> Serializer<T> for WincodeSerializer

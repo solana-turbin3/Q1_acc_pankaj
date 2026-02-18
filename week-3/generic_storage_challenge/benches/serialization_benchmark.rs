@@ -37,6 +37,9 @@ fn criterion_benchmark(c: &mut Criterion) {
 
     let mut group = c.benchmark_group("serialization");
 
+    // Setting measurement time to 10 seconds for more accurate results
+    group.measurement_time(std::time::Duration::from_secs(10));
+
     // Borsh
     group.bench_function("borsh_save", |b| {
         let mut storage = Storage::new(BorshSerializer);
@@ -79,6 +82,23 @@ fn criterion_benchmark(c: &mut Criterion) {
         storage.save(&person).unwrap();
         b.iter(|| {
             let _ = storage.load().unwrap();
+        })
+    });
+
+    // Conversion Benchmarks
+    group.bench_function("convert_borsh_to_json", |b| {
+        let mut storage = Storage::new(BorshSerializer);
+        storage.save(&person).unwrap();
+        b.iter(|| {
+            let _ = storage.clone().convert(JsonSerializer).unwrap();
+        })
+    });
+
+    group.bench_function("convert_json_to_wincode", |b| {
+        let mut storage = Storage::new(JsonSerializer);
+        storage.save(&person).unwrap();
+        b.iter(|| {
+            let _ = storage.clone().convert(WincodeSerializer).unwrap();
         })
     });
 

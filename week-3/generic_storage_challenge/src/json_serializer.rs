@@ -1,4 +1,5 @@
 use crate::{error::StorageError, Serializer};
+#[derive(Clone)]
 pub struct JsonSerializer;
 
 impl<T> Serializer<T> for JsonSerializer

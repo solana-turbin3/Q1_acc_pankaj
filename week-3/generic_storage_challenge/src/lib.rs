@@ -11,6 +11,7 @@ pub trait Serializer<T> {
     fn from_bytes(&self, bytes: &[u8]) -> Result<T, StorageError>;
 }
 
+#[derive(Clone)]
 pub struct Storage<T, S> {
     data: Option<Vec<u8>>,
     serializer: S,
@@ -43,5 +44,24 @@ where
 
     pub fn has_data(&self) -> bool {
         self.data.is_some()
+    }
+
+    pub fn convert<NewS>(self, new_serializer: NewS) -> Result<Storage<T, NewS>, StorageError>
+    where
+        NewS: Serializer<T>,
+    {
+        let data = match self.data {
+            Some(bytes) => {
+                let value = self.serializer.from_bytes(&bytes)?;
+                Some(new_serializer.to_bytes(&value)?)
+            }
+            None => None,
+        };
+
+        Ok(Storage {
+            data,
+            serializer: new_serializer,
+            _phantom: PhantomData,
+        })
     }
 }

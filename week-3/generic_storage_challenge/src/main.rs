@@ -25,8 +25,8 @@ struct Person {
 
 fn main() {
     let person = Person {
-        name: "André".to_string(),
-        age: 30,
+        name: "Andre".to_string(),
+        age: 32,
     };
 
     println!("Original: {:?}\n", person);
@@ -57,7 +57,7 @@ fn main() {
     println!("JSON    loaded: {:?}", loaded);
     assert_eq!(person, loaded);
 
-    println!("\n✅ All serializers work correctly!");
+    println!("All serializers work correctly!");
 }
 
 // Unit tests
@@ -68,8 +68,8 @@ mod tests {
 
     fn sample_person() -> Person {
         Person {
-            name: "Bob".to_string(),
-            age: 25,
+            name: "Andre".to_string(),
+            age: 32,
         }
     }
 

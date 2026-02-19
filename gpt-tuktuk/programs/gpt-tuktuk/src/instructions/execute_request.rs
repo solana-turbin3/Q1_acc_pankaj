@@ -138,3 +138,25 @@ pub fn execute_request(ctx: Context<ExecuteRequest>, prompt: String) -> Result<(
     msg!("GPT Oracle request sent successfully!");
     Ok(())
 }
+
+/*
+solana_gpt_oracle::cpi::interact_with_llm()
+we need to do this manually bacause of version mismatch
+pub struct InteractWithLlm<'info> {
+    pub payer: Signer,
+    pub interaction: AccountInfo,
+    pub context_account: Account,
+    pub system_program: Program,
+}
+let ix = Instruction {
+    program_id: ctx.accounts.gpt_oracle_program.key(),   // Which program to call
+    accounts: vec![
+        AccountMeta::new(user, true),                     // payer (signer)
+        AccountMeta::new(oracle_interaction, false),       // interaction PDA
+        AccountMeta::new_readonly(oracle_context_account), // context account
+        AccountMeta::new_readonly(system_program),         // system program
+    ],
+    ...
+};
+
+*/

@@ -71,7 +71,7 @@ Welcome to my portfolio of projects, smart contract implementations, and assignm
 ### Week 3
 
 #### 1. Week 3 Subtask
-- **Description:** Current tasks and programs built during Week 3 of the Turbin3 accelerator.
+- **Description:** Generic-storage-challenge [borsh, wincode, serde] && persistant todo-cli with borsh
 - **Local Source:** [`./week-3`](./week-3)
 - **External Link:** [Turbin3 Repo Submission](https://github.com/solana-turbin3/Q1_acc_pankaj/tree/main/week-3)
 

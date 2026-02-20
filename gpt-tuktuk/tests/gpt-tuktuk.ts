@@ -16,7 +16,7 @@ describe("gpt-tuktuk", () => {
 
   const program = anchor.workspace.GptTuktuk as Program<GptTuktuk>;
 
-  const taskId = 123;
+  const taskId = 1;
 
   const [requestState] = PublicKey.findProgramAddressSync(
     [
@@ -42,30 +42,31 @@ describe("gpt-tuktuk", () => {
   });
 
   it("Schedules a GPT request via Tuktuk", async () => {
-    // NOTE: This test requires Tuktuk to be deployed and a task queue to be created.
-    // On localnet without Tuktuk, this will fail. On devnet, use actual Tuktuk queue addresses.
-
     const prompt = "What is Solana?";
     const delay = 5; // 5 seconds
 
-    // You need to provide a real oracle context account.
-    // On devnet, first call `create_llm_context` on the GPT Oracle to get one.
-    // For now, we derive a placeholder based on the oracle's counter PDA.
-    const [oracleCounter] = PublicKey.findProgramAddressSync(
-      [Buffer.from("counter")],
-      GPT_ORACLE_PROGRAM_ID
+    const oracleContextAccount = new PublicKey("5nyx2rym3F9XEvhXpx4riLSbbVPxMuXkpZc5G6BT5Bu6");
+    const taskQueue = new PublicKey("24aSLaMuki7E9AwEhqsPWtJh7jZtWwPppLR9PjwT1eaB");
+
+    // The authority of the taskQueue is our gpt-tuktuk program's queueAuthority PDA
+    const [gptQueueAuthority] = PublicKey.findProgramAddressSync(
+      [Buffer.from("queue_authority")],
+      program.programId
     );
 
-    // Example context account (counter=0 -> seeds: ["test-context", 0u32_le])
-    const [oracleContextAccount] = PublicKey.findProgramAddressSync(
-      [Buffer.from("test-context"), Buffer.from([0, 0, 0, 0])],
-      GPT_ORACLE_PROGRAM_ID
-    );
+    const { taskQueueAuthorityKey } = require("@helium/tuktuk-sdk");
+    const [taskQueueAuthority] = taskQueueAuthorityKey(taskQueue, gptQueueAuthority, TUKTUK_PROGRAM_ID);
 
-    // Mock Task Queue accounts (replace with real ones on devnet)
-    const taskQueue = anchor.web3.Keypair.generate().publicKey;
-    const taskQueueAuthority = anchor.web3.Keypair.generate().publicKey;
-    const task = anchor.web3.Keypair.generate().publicKey;
+    // Tuktuk task PDA derivation (queue, id)
+    // Actually, Tuktuk TaskV0 PDA seeds: [b"task", task_queue, id]
+    const [task] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("task"),
+        taskQueue.toBuffer(),
+        new anchor.BN(taskId).toArrayLike(Buffer, "le", 2),
+      ],
+      TUKTUK_PROGRAM_ID
+    );
 
     try {
       await program.methods.scheduleRequest(taskId, prompt, new anchor.BN(delay))
@@ -74,38 +75,24 @@ describe("gpt-tuktuk", () => {
           user: provider.publicKey,
           taskQueue,
           taskQueueAuthority,
-          task,
-          queueAuthority,
+          task: task,
           oracleContextAccount,
-          systemProgram: SystemProgram.programId,
-          tuktukProgram: TUKTUK_PROGRAM_ID,
-        })
+        } as any)
         .rpc();
-      console.log("Scheduled GPT Request via Tuktuk");
-    } catch (e) {
-      console.log("Scheduling failed (expected without Tuktuk/Oracle on localnet):",
-        (e as Error).message?.slice(0, 150));
+      console.log("✅ Scheduled GPT Request via Tuktuk");
+    } catch (e: any) {
+      console.log("Scheduling failed:", e.message);
+      throw e;
     }
   });
 
   it("Executes a GPT request (calls GPT Oracle CPI)", async () => {
-    // NOTE: This test requires:
-    // 1. The GPT Oracle program deployed (devnet: LLMrieZMpbJFwN52WgmBNMxYojrpRVYXdC1RCweEbab)
-    // 2. An LLM context created on the oracle
-    // 3. The request_state to be initialized (via schedule_request)
-    //
-    // On localnet without the oracle, this will fail.
-    // On devnet, the oracle will process the request and call back consume_result.
-
+    // This part is automatically called by Tuktuk when the task triggers!
+    // But we can also manually call it if we want to bypass the wait, or if Tuktuk is slow.
+    // Let's trigger it manually to verify execute_request logic instantly.
     const prompt = "What is Solana?";
+    const oracleContextAccount = new PublicKey("5nyx2rym3F9XEvhXpx4riLSbbVPxMuXkpZc5G6BT5Bu6");
 
-    // Derive the oracle context account
-    const [oracleContextAccount] = PublicKey.findProgramAddressSync(
-      [Buffer.from("test-context"), Buffer.from([0, 0, 0, 0])],
-      GPT_ORACLE_PROGRAM_ID
-    );
-
-    // Derive the interaction PDA
     const [oracleInteraction] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("interaction"),
@@ -122,41 +109,13 @@ describe("gpt-tuktuk", () => {
           user: provider.publicKey,
           oracleContextAccount,
           oracleInteraction,
-          gptOracleProgram: GPT_ORACLE_PROGRAM_ID,
-          systemProgram: SystemProgram.programId,
-        })
+        } as any)
         .rpc();
-      console.log("Execute request sent to GPT Oracle");
-    } catch (e) {
-      console.log("Execute request failed (expected without Oracle on localnet):",
-        (e as Error).message?.slice(0, 150));
+      console.log("✅ Execute request sent to GPT Oracle");
+    } catch (e: any) {
+      console.error("Execute request failed:", e);
+      throw e;
     }
-  });
-
-  it("Verifies consume_result callback structure", async () => {
-    // NOTE: In production, this is called automatically by the GPT Oracle's
-    // callback_from_llm instruction. The oracle's Identity PDA signs the CPI.
-    //
-    // We can't easily test this on localnet without the oracle program.
-    // On devnet, after execute_request, poll the request_state account
-    // until is_completed is true.
-
-    // Derive oracle Identity PDA (the oracle creates this during its initialize)
-    const [oracleIdentity] = PublicKey.findProgramAddressSync(
-      [Buffer.from("identity")],
-      GPT_ORACLE_PROGRAM_ID
-    );
-
-    console.log("Oracle Identity PDA:", oracleIdentity.toBase58());
-    console.log("Request State PDA:", requestState.toBase58());
-    console.log("GPT Oracle Program:", GPT_ORACLE_PROGRAM_ID.toBase58());
-
-    // On devnet, you would poll like this:
-    // const state = await program.account.gptRequest.fetch(requestState);
-    // assert.isTrue(state.isCompleted);
-    // console.log("GPT Response:", state.result);
-
-    console.log("Consume result is handled by the GPT Oracle callback (devnet only)");
   });
 
   it("Polls for GPT response (devnet integration)", async () => {

@@ -1,0 +1,615 @@
+{
+  "accounts": [
+    {
+      "discriminator": [
+        75,
+        176,
+        185,
+        173,
+        144,
+        35,
+        90,
+        109
+      ],
+      "name": "ContextAccount"
+    },
+    {
+      "discriminator": [
+        255,
+        176,
+        4,
+        245,
+        188,
+        253,
+        124,
+        25
+      ],
+      "name": "Counter"
+    },
+    {
+      "discriminator": [
+        58,
+        132,
+        5,
+        12,
+        176,
+        164,
+        85,
+        112
+      ],
+      "name": "Identity"
+    },
+    {
+      "discriminator": [
+        194,
+        124,
+        204,
+        14,
+        165,
+        190,
+        70,
+        130
+      ],
+      "name": "Interaction"
+    }
+  ],
+  "address": "LLMrieZMpbJFwN52WgmBNMxYojrpRVYXdC1RCweEbab",
+  "instructions": [
+    {
+      "accounts": [
+        {
+          "name": "payer",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "name": "identity",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  100,
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "interaction",
+          "writable": true
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "response",
+          "type": "string"
+        }
+      ],
+      "discriminator": [
+        64,
+        202,
+        209,
+        39,
+        156,
+        18,
+        216,
+        170
+      ],
+      "name": "callback_from_llm"
+    },
+    {
+      "accounts": [
+        {
+          "name": "identity",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  100,
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "response",
+          "type": "string"
+        }
+      ],
+      "discriminator": [
+        8,
+        43,
+        33,
+        15,
+        26,
+        22,
+        255,
+        206
+      ],
+      "name": "callback_from_oracle"
+    },
+    {
+      "accounts": [
+        {
+          "name": "payer",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "name": "counter",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              }
+            ]
+          },
+          "writable": true
+        },
+        {
+          "name": "context_account",
+          "writable": true
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "name": "system_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "text",
+          "type": "string"
+        }
+      ],
+      "discriminator": [
+        224,
+        109,
+        4,
+        173,
+        191,
+        25,
+        42,
+        162
+      ],
+      "name": "create_llm_context"
+    },
+    {
+      "accounts": [
+        {
+          "name": "payer",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "name": "buffer_interaction",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  117,
+                  102,
+                  102,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "interaction"
+              }
+            ]
+          },
+          "writable": true
+        },
+        {
+          "name": "delegation_record_interaction",
+          "pda": {
+            "program": {
+              "kind": "account",
+              "path": "delegation_program"
+            },
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  108,
+                  101,
+                  103,
+                  97,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "interaction"
+              }
+            ]
+          },
+          "writable": true
+        },
+        {
+          "name": "delegation_metadata_interaction",
+          "pda": {
+            "program": {
+              "kind": "account",
+              "path": "delegation_program"
+            },
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  108,
+                  101,
+                  103,
+                  97,
+                  116,
+                  105,
+                  111,
+                  110,
+                  45,
+                  109,
+                  101,
+                  116,
+                  97,
+                  100,
+                  97,
+                  116,
+                  97
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "interaction"
+              }
+            ]
+          },
+          "writable": true
+        },
+        {
+          "name": "interaction",
+          "writable": true
+        },
+        {
+          "name": "context_account"
+        },
+        {
+          "address": "LLMrieZMpbJFwN52WgmBNMxYojrpRVYXdC1RCweEbab",
+          "name": "owner_program"
+        },
+        {
+          "address": "DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh",
+          "name": "delegation_program"
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "name": "system_program"
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        214,
+        51,
+        72,
+        64,
+        235,
+        222,
+        82,
+        123
+      ],
+      "name": "delegate_interaction"
+    },
+    {
+      "accounts": [
+        {
+          "name": "payer",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "name": "identity",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  100,
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          },
+          "writable": true
+        },
+        {
+          "name": "counter",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              }
+            ]
+          },
+          "writable": true
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "name": "system_program"
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "name": "initialize"
+    },
+    {
+      "accounts": [
+        {
+          "name": "payer",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "name": "interaction",
+          "writable": true
+        },
+        {
+          "name": "context_account"
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "name": "system_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "text",
+          "type": "string"
+        },
+        {
+          "name": "callback_program_id",
+          "type": "pubkey"
+        },
+        {
+          "name": "callback_discriminator",
+          "type": {
+            "array": [
+              "u8",
+              8
+            ]
+          }
+        },
+        {
+          "name": "account_metas",
+          "type": {
+            "option": {
+              "vec": {
+                "defined": {
+                  "name": "AccountMeta"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "discriminator": [
+        2,
+        54,
+        5,
+        16,
+        87,
+        123,
+        219,
+        132
+      ],
+      "name": "interact_with_llm"
+    },
+    {
+      "accounts": [
+        {
+          "name": "base_account",
+          "writable": true
+        },
+        {
+          "name": "buffer"
+        },
+        {
+          "name": "payer",
+          "writable": true
+        },
+        {
+          "name": "system_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "account_seeds",
+          "type": {
+            "vec": "bytes"
+          }
+        }
+      ],
+      "discriminator": [
+        196,
+        28,
+        41,
+        206,
+        48,
+        37,
+        51,
+        167
+      ],
+      "name": "process_undelegation"
+    }
+  ],
+  "metadata": {
+    "description": "Solana LLM Oracle",
+    "name": "solana_gpt_oracle",
+    "spec": "0.1.0",
+    "version": "0.1.0"
+  },
+  "types": [
+    {
+      "name": "AccountMeta",
+      "type": {
+        "fields": [
+          {
+            "name": "pubkey",
+            "type": "pubkey"
+          },
+          {
+            "name": "is_signer",
+            "type": "bool"
+          },
+          {
+            "name": "is_writable",
+            "type": "bool"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "docs": [
+        "Accounts"
+      ],
+      "name": "ContextAccount",
+      "type": {
+        "fields": [
+          {
+            "name": "text",
+            "type": "string"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "Counter",
+      "type": {
+        "fields": [
+          {
+            "name": "count",
+            "type": "u32"
+          }
+        ],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "Identity",
+      "type": {
+        "fields": [],
+        "kind": "struct"
+      }
+    },
+    {
+      "name": "Interaction",
+      "type": {
+        "fields": [
+          {
+            "name": "context",
+            "type": "pubkey"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "callback_program_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "callback_discriminator",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "callback_account_metas",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "AccountMeta"
+                }
+              }
+            }
+          },
+          {
+            "name": "is_processed",
+            "type": "bool"
+          }
+        ],
+        "kind": "struct"
+      }
+    }
+  ]
+}

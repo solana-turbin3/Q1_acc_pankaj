@@ -1,8 +1,11 @@
 use pinocchio::{error::ProgramError, AccountView};
+use wincode::{SchemaRead, SchemaWrite};
 
+/// Escrow state using Wincode zero-copy deserialization.
+/// All fields are [u8; N] so the struct is zero-copy eligible (no padding).
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq)]
-pub struct Escrow {
+#[derive(Clone, Copy, Debug, Default, PartialEq, SchemaWrite, SchemaRead)]
+pub struct EscrowV2 {
     maker: [u8; 32],
     mint_a: [u8; 32],
     mint_b: [u8; 32],
@@ -11,25 +14,26 @@ pub struct Escrow {
     pub bump: u8,
 }
 
-impl Escrow {
+/// Instruction data for MakeV2, parsed via Wincode.
+#[derive(Clone, Copy, Debug, SchemaRead)]
+pub struct MakeParams {
+    pub bump: u8,
+    pub amount_to_receive: u64,
+    pub amount_to_give: u64,
+}
+
+impl EscrowV2 {
     pub const LEN: usize = 32 + 32 + 32 + 8 + 8 + 1;
 
+    /// Deserialize from account data using Wincode zero-copy.
     pub fn from_account_info(account_info: &AccountView) -> Result<&mut Self, ProgramError> {
-        // borrowing the account's data mutably
         let mut data = account_info.try_borrow_mut()?;
-
-        // checking the data is exactly 113 bytes
-        if data.len() != Escrow::LEN {
+        if data.len() != Self::LEN {
             return Err(ProgramError::InvalidAccountData);
         }
-
-        // checking alignment (must be compatible with Escrow's alignment)
-        if (data.as_ptr() as usize) % core::mem::align_of::<Self>() != 0 {
-            return Err(ProgramError::InvalidAccountData);
-        }
-        // casting the raw bytes into an Escrow struct reference
+        // Wincode zero-copy: cast bytes directly to &mut Self
+        // Safe because EscrowV2 is #[repr(C)] and all fields are [u8; N]
         Ok(unsafe { &mut *(data.as_mut_ptr() as *mut Self) })
-        // why unsafe rust can't verify at compile time
     }
 
     pub fn maker(&self) -> pinocchio::Address {

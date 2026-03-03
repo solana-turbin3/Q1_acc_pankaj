@@ -198,6 +198,69 @@ describe("nft-staking-core", () => {
     console.log("\nTime traveled in days", TIME_TRAVEL_IN_DAYS);
   });
 
+  it("Claim Rewards", async () => {
+    // Get the user rewards ATA account
+    const userRewardsAta = getAssociatedTokenAddressSync(
+      rewardsMint,
+      provider.wallet.publicKey,
+      false,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+    const tx = await program.methods
+      .claimRewards()
+      .accountsPartial({
+        user: provider.wallet.publicKey,
+        updateAuthority,
+        config,
+        rewardsMint,
+        userRewardsAta,
+        nft: nftKeypair.publicKey,
+        collection: collectionKeypair.publicKey,
+        mplCoreProgram: MPL_CORE_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+    console.log("\nYour transaction signature (claim rewards)", tx);
+    console.log(
+      "User rewards balance",
+      (await provider.connection.getTokenAccountBalance(userRewardsAta)).value
+        .uiAmount
+    );
+
+    const umi = createUmi(provider.connection.rpcEndpoint);
+    const collectionData = await fetchCollection(
+      umi,
+      publicKey(collectionKeypair.publicKey)
+    );
+
+    const attributeList = collectionData.attributes?.attributeList || [];
+    const totalStakedAttr = attributeList.find(
+      (attr) => attr.key === "total_staked"
+    );
+
+    expect(totalStakedAttr).to.not.be.undefined;
+    expect(totalStakedAttr!.value).to.equal("1");
+  });
+
+  it("Time travel to the future again", async () => {
+    const clockAccount = await provider.connection.getAccountInfo(
+      anchor.web3.SYSVAR_CLOCK_PUBKEY
+    );
+    if (!clockAccount)
+      throw new Error("Failed to get SYSVAR_CLOCK_PUBKEY from Surfnet");
+    const currentTimestampMs =
+      Number(clockAccount.data.readBigInt64LE(32)) * 1000;
+
+    await advanceTime({
+      absoluteTimestamp:
+        currentTimestampMs + TIME_TRAVEL_IN_DAYS * MILLISECONDS_PER_DAY,
+    });
+    console.log("\nTime traveled again in days", TIME_TRAVEL_IN_DAYS);
+  });
+
   it("Unstake an NFT", async () => {
     // Get the user rewards ATA account
     const userRewardsAta = getAssociatedTokenAddressSync(
@@ -243,5 +306,102 @@ describe("nft-staking-core", () => {
 
     expect(totalStakedAttr).to.not.be.undefined;
     expect(totalStakedAttr!.value).to.equal("0");
+  });
+
+  it("Mint and Stake a second NFT to test burning", async () => {
+    const secondNftKeypair = anchor.web3.Keypair.generate();
+
+    // Mint
+    await program.methods
+      .mintNft("Burn NFT", "https://example.com/burn")
+      .accountsPartial({
+        user: provider.wallet.publicKey,
+        nft: secondNftKeypair.publicKey,
+        collection: collectionKeypair.publicKey,
+        updateAuthority,
+        systemProgram: SystemProgram.programId,
+        mplCoreProgram: MPL_CORE_PROGRAM_ID,
+      })
+      .signers([secondNftKeypair])
+      .rpc({ commitment: "confirmed" });
+
+    // Stake
+    await program.methods
+      .stake()
+      .accountsPartial({
+        user: provider.wallet.publicKey,
+        updateAuthority,
+        config,
+        nft: secondNftKeypair.publicKey,
+        collection: collectionKeypair.publicKey,
+        systemProgram: SystemProgram.programId,
+        mplCoreProgram: MPL_CORE_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    // Time Travel explicitly
+    const clockAccount = await provider.connection.getAccountInfo(
+      anchor.web3.SYSVAR_CLOCK_PUBKEY
+    );
+    const currentTimestampMs =
+      Number(clockAccount!.data.readBigInt64LE(32)) * 1000;
+
+    await advanceTime({
+      absoluteTimestamp:
+        currentTimestampMs + TIME_TRAVEL_IN_DAYS * MILLISECONDS_PER_DAY,
+    });
+
+    // Burn Staked NFT
+    const userRewardsAta = getAssociatedTokenAddressSync(
+      rewardsMint,
+      provider.wallet.publicKey,
+      false,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    const tx = await program.methods
+      .burnStakedNft()
+      .accountsPartial({
+        user: provider.wallet.publicKey,
+        updateAuthority,
+        config,
+        rewardsMint,
+        userRewardsAta,
+        nft: secondNftKeypair.publicKey,
+        collection: collectionKeypair.publicKey,
+        mplCoreProgram: MPL_CORE_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    console.log("\nYour transaction signature (burn staked nft)", tx);
+
+    // Total rewards should now be 160 + (80 * 2 multiplier) = 320
+    const balance = (await provider.connection.getTokenAccountBalance(userRewardsAta)).value.uiAmount;
+    console.log("User rewards balance after burn", balance);
+    expect(balance).to.equal(320);
+
+    const umi = createUmi(provider.connection.rpcEndpoint);
+    const collectionData = await fetchCollection(
+      umi,
+      publicKey(collectionKeypair.publicKey)
+    );
+    const attributeList = collectionData.attributes?.attributeList || [];
+    const totalStakedAttr = attributeList.find(
+      (attr) => attr.key === "total_staked"
+    );
+    expect(totalStakedAttr).to.not.be.undefined;
+    expect(totalStakedAttr!.value).to.equal("0");
+
+    // The NFT was burned, so trying to fetch it using UMI should fail
+    try {
+      await fetchCollection(umi, publicKey(secondNftKeypair.publicKey));
+      expect.fail("Asset should not exist");
+    } catch (e) {
+      // Expected
+    }
   });
 });

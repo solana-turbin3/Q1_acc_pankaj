@@ -208,6 +208,26 @@ impl<'info> Stake<'info> {
             }
         }
 
+        // Add BurnDelegate (check if BurnDelegate already exists)
+        match fetch_plugin::<BaseAssetV1, mpl_core::types::BurnDelegate>(
+            &self.nft.to_account_info(),
+            PluginType::BurnDelegate,
+        ) {
+            Err(_) => {
+                // Add BurnDelegate plugin
+                AddPluginV1CpiBuilder::new(&self.mpl_core_program.to_account_info())
+                    .asset(&self.nft.to_account_info())
+                    .collection(Some(&self.collection.to_account_info()))
+                    .payer(&self.user.to_account_info())
+                    .authority(Some(&self.user.to_account_info()))
+                    .system_program(&self.system_program.to_account_info())
+                    .plugin(Plugin::BurnDelegate(mpl_core::types::BurnDelegate {}))
+                    .init_authority(PluginAuthority::UpdateAuthority)
+                    .invoke()?;
+            }
+            Ok(_) => {}
+        }
+
         Ok(())
     }
 }

@@ -1,0 +1,131 @@
+Streaming transaction logs mentioning 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF. Confirmed commitment
+Transaction executed in slot 403834407:
+  Signature: 4Vn91jRtkfmsdMguUtskALKH9GPWBTYW2Uc6NgsTYTGrEC9NoRWWu9VE4WyWFR6yaaw8ZHa1nMvs5nzUij6ohALr
+  Status: Ok
+  Log Messages:
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF invoke [1]
+    Program log: Instruction: CreateCollection
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d invoke [2]
+    Program log: Instruction: CreateCollectionV2
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d consumed 12363 of 189336 compute units
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d success
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF consumed 23482 of 200000 compute units
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF success
+Transaction executed in slot 403834408:
+  Signature: 5ri79vErVq4Nc67u77Cixnp9BbXDDGCUsqycbcaXgrgiJ1zDgfYhfv3E1oP1qRtHXBHQxSxHc7c21Gv2zXPW6sxs
+  Status: Ok
+  Log Messages:
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF invoke [1]
+    Program log: Instruction: MintNft
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d invoke [2]
+    Program log: Instruction: CreateV2
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program log: programs/mpl-core/src/state/collection.rs:139:Approve
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d consumed 12226 of 189194 compute units
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d success
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF consumed 23495 of 200000 compute units
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF success
+Transaction executed in slot 403834409:
+  Signature: 4bvtUoq1xyx2FMWSrU9vCdauHM1XWRw7XaQvE5jrou8moJzkvS2s7bdUECtV1MCJXgYbmUAtzzVBp3gmAfuYtHFy
+  Status: Ok
+  Log Messages:
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF invoke [1]
+    Program log: Instruction: InitializeConfig
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [2]
+    Program log: Instruction: InitializeMint2
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 2780 of 185299 compute units
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF consumed 24468 of 200000 compute units
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF success
+Transaction executed in slot 403834410:
+  Signature: 5uxt2bYPNbUdjGaZJn9UgEFzLRQgzB61Vbo1J2eW3C1kaug6qn5kq2ZKqhWbg5Pq78Qc3svMXKQtj37CjEpyDKRB
+  Status: Ok
+  Log Messages:
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF invoke [1]
+    Program log: Instruction: Stake
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d invoke [2]
+    Program log: Instruction: AddPlugin
+    Program log: programs/mpl-core/src/state/collection.rs:160:Approve
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d consumed 15289 of 184323 compute units
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d success
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d invoke [2]
+    Program log: Instruction: UpdateCollectionPlugin
+    Program log: programs/mpl-core/src/plugins/lifecycle.rs:347:Base:Approved
+    Program log: programs/mpl-core/src/plugins/lifecycle.rs:737:Approve
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d consumed 9311 of 162120 compute units
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d success
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d invoke [2]
+    Program log: Instruction: AddPlugin
+    Program log: programs/mpl-core/src/state/asset.rs:177:Approve
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d consumed 11728 of 148028 compute units
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d success
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF consumed 64222 of 200000 compute units
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF success
+Transaction executed in slot 405216004:
+  Signature: 3GQNtWprAPJSeBdY1a94Fb3Z2tqrrBCmMWYEdtJ3xCu7uKkVx6p6KeoFfN8ZwkE1xoXfHCFUDrqN3gx8e99Vupzb
+  Status: Ok
+  Log Messages:
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF invoke [1]
+    Program log: Instruction: Unstake
+    Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [2]
+    Program log: Create
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]
+    Program log: Instruction: GetAccountDataSize
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 1595 of 186448 compute units
+    Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA=
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program log: Initialize the associated token account
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]
+    Program log: Instruction: InitializeImmutableOwner
+    Program log: Please upgrade to SPL Token 2022 for immutable owner support
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 1405 of 179835 compute units
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [3]
+    Program log: Instruction: InitializeAccount3
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 4214 of 175953 compute units
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success
+    Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 20389 of 191845 compute units
+    Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d invoke [2]
+    Program log: Instruction: UpdateCollectionPlugin
+    Program log: programs/mpl-core/src/plugins/lifecycle.rs:347:Base:Approved
+    Program log: programs/mpl-core/src/plugins/lifecycle.rs:737:Approve
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d consumed 9311 of 147069 compute units
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d success
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d invoke [2]
+    Program log: Instruction: UpdatePlugin
+    Program log: programs/mpl-core/src/plugins/lifecycle.rs:347:Base:Approved
+    Program log: programs/mpl-core/src/plugins/lifecycle.rs:737:Approve
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d consumed 15605 of 133931 compute units
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d success
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d invoke [2]
+    Program log: Instruction: UpdatePlugin
+    Program log: programs/mpl-core/src/plugins/lifecycle.rs:347:Base:Approved
+    Program log: programs/mpl-core/src/plugins/lifecycle.rs:737:Approve
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d consumed 10640 of 115063 compute units
+    Program CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d success
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [2]
+    Program log: Instruction: MintToChecked
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 4499 of 102293 compute units
+    Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF consumed 102684 of 200000 compute units
+    Program 9REyT3VDPdLxerPoncywuMZd3cubHqVpNSV2cf4uRswF success
